@@ -58,7 +58,9 @@
         let prevY = 0;
         let rotationX = 0;
         let rotationY = 0;
+        let rotationSpeed = 2; // Control speed of the arrow key movement
 
+        // Mouse drag events
         cube.addEventListener('mousedown', (e) => {
             isDragging = true;
             prevX = e.clientX;
@@ -85,7 +87,7 @@
             cube.style.cursor = 'grab';
         });
 
-        // For mobile support
+        // Touch drag events (for mobile support)
         cube.addEventListener('touchstart', (e) => {
             isDragging = true;
             prevX = e.touches[0].clientX;
@@ -111,6 +113,22 @@
             isDragging = false;
             cube.style.cursor = 'grab';
         });
+
+        // Arrow key controls
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowUp') {
+                rotationX -= rotationSpeed;
+            } else if (e.key === 'ArrowDown') {
+                rotationX += rotationSpeed;
+            } else if (e.key === 'ArrowLeft') {
+                rotationY -= rotationSpeed;
+            } else if (e.key === 'ArrowRight') {
+                rotationY += rotationSpeed;
+            }
+
+            cube.style.transform = `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;
+        });
+
     </script>
 
 </body>
