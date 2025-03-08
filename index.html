@@ -21,6 +21,7 @@
             height: 200px;
             transform-style: preserve-3d;
             animation: rotateCube 5s infinite linear;
+            cursor: pointer;
         }
 
         .face {
@@ -46,7 +47,7 @@
 </head>
 <body>
 
-    <div class="cube">
+    <div class="cube" onclick="handleClick()">
         <div class="face front"></div>
         <div class="face back"></div>
         <div class="face left"></div>
@@ -54,6 +55,24 @@
         <div class="face top"></div>
         <div class="face bottom"></div>
     </div>
+
+    <script>
+        let rotationDuration = 5; // initial duration in seconds
+
+        function handleClick() {
+            const cube = document.querySelector('.cube');
+
+            // Reduce the animation duration to make the cube spin faster with each click
+            if (rotationDuration <= 0.5) {
+                rotationDuration = 5; // Reset to the initial speed once it reaches 0.5 seconds
+            } else {
+                rotationDuration -= 0.5; // Decrease by 0.5 seconds
+            }
+
+            // Update the cube's animation speed
+            cube.style.animation = `rotateCube ${rotationDuration}s infinite linear`;
+        }
+    </script>
 
 </body>
 </html>
