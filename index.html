@@ -20,8 +20,8 @@
             width: 200px;
             height: 200px;
             transform-style: preserve-3d;
-            animation: rotateCube 5s infinite linear;
-            cursor: pointer;
+            cursor: grab;
+            transition: transform 0.1s;
         }
 
         .face {
@@ -38,16 +38,11 @@
         .right  { transform: rotateY(90deg) translateZ(100px); background-color: #FFEB3B; }
         .top    { transform: rotateX(90deg) translateZ(100px); background-color: #9C27B0; }
         .bottom { transform: rotateX(-90deg) translateZ(100px); background-color: #FF9800; }
-
-        @keyframes rotateCube {
-            0% { transform: rotateX(0deg) rotateY(0deg); }
-            100% { transform: rotateX(360deg) rotateY(360deg); }
-        }
     </style>
 </head>
 <body>
 
-    <div class="cube" onclick="handleClick()">
+    <div class="cube">
         <div class="face front"></div>
         <div class="face back"></div>
         <div class="face left"></div>
@@ -57,21 +52,65 @@
     </div>
 
     <script>
-        let rotationDuration = 5; // initial duration in seconds
+        const cube = document.querySelector('.cube');
+        let isDragging = false;
+        let prevX = 0;
+        let prevY = 0;
+        let rotationX = 0;
+        let rotationY = 0;
 
-        function handleClick() {
-            const cube = document.querySelector('.cube');
+        cube.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            prevX = e.clientX;
+            prevY = e.clientY;
+            cube.style.cursor = 'grabbing';
+        });
 
-            // Reduce the animation duration to make the cube spin faster with each click
-            if (rotationDuration <= 0.5) {
-                rotationDuration = 5; // Reset to the initial speed once it reaches 0.5 seconds
-            } else {
-                rotationDuration -= 0.5; // Decrease by 0.5 seconds
-            }
+        window.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            
+            const deltaX = e.clientX - prevX;
+            const deltaY = e.clientY - prevY;
+            rotationX += deltaY * 0.5; // Adjust rotation speed
+            rotationY += deltaX * 0.5; // Adjust rotation speed
 
-            // Update the cube's animation speed
-            cube.style.animation = `rotateCube ${rotationDuration}s infinite linear`;
-        }
+            cube.style.transform = `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;
+
+            prevX = e.clientX;
+            prevY = e.clientY;
+        });
+
+        window.addEventListener('mouseup', () => {
+            isDragging = false;
+            cube.style.cursor = 'grab';
+        });
+
+        // For mobile support
+        cube.addEventListener('touchstart', (e) => {
+            isDragging = true;
+            prevX = e.touches[0].clientX;
+            prevY = e.touches[0].clientY;
+            cube.style.cursor = 'grabbing';
+        });
+
+        window.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+
+            const deltaX = e.touches[0].clientX - prevX;
+            const deltaY = e.touches[0].clientY - prevY;
+            rotationX += deltaY * 0.5; // Adjust rotation speed
+            rotationY += deltaX * 0.5; // Adjust rotation speed
+
+            cube.style.transform = `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;
+
+            prevX = e.touches[0].clientX;
+            prevY = e.touches[0].clientY;
+        });
+
+        window.addEventListener('touchend', () => {
+            isDragging = false;
+            cube.style.cursor = 'grab';
+        });
     </script>
 
 </body>
